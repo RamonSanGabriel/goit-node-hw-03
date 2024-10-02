@@ -1,15 +1,18 @@
 import Joi from 'joi';
 
 // Define validation for adding a contact
-const addContactValidation = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().email().required(),
-  phone: Joi.string().required(),
-  favorite: Joi.boolean(),
+const signUpValidation = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+    .required()
+    .messages({
+      'any.required': 'Missing required email field',
+      'string.email': 'Invalid email',
+    }),
+  password: Joi.string().min(6).max(16).required().messages({
+    'any.required': 'Missing required email field',
+    'string.min': 'Password must be at least 6 characters',
+    'string.max': 'Password must not exceed 16 characters',
+  }),
 });
-
-// Define validation for updating favorite field
-const favoriteValidation = Joi.object({
-  favorite: Joi.boolean().required(),
-});
-export { addContactValidation, favoriteValidation };
+export { signUpValidation };
