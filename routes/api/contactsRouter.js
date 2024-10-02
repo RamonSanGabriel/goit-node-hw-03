@@ -1,7 +1,5 @@
 // const express = require('express')
 import express from 'express';
-// prettier-ignore
-import {addContact,getContactById,updateContact,listContacts,removeContact} from '../../models/contacts.js';
 import {
   addContactValidation,
   favoriteValidation,
