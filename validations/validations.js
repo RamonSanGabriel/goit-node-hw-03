@@ -8,6 +8,7 @@ const addContactValidation = Joi.object({
   favorite: Joi.boolean(),
 });
 
+// Define validation for updating favorite field
 const favoriteValidation = Joi.object({
   favorite: Joi.boolean().required(),
 });
