@@ -80,7 +80,7 @@ router.put('/:contactId', async (req, res, next) => {
   }
 });
 
-router.patch('/:contactId', async (req, res, next) => {
+router.patch('/:contactId/favorite', async (req, res, next) => {
   try {
     const { error } = favoriteValidation.validate(req.body);
     if (error) {
