@@ -4,6 +4,8 @@ import 'dotenv/config';
 import { User } from '../models/usersModel.js';
 import { httpError } from '../helpers/httpError.js';
 import { signUpValidation } from '../validations/validations.js';
+import gravatar from 'gravatar';
+import { Jimp } from 'jimp';
 
 const { SECRET_KEY } = process.env;
 
@@ -24,7 +26,13 @@ const signupUser = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await User.create({ email, password: hashPassword });
+  // Create a link to the user's avatar wth gravatar
+  const avatarURL = gravatar.url(email, { protocol: 'http' });
+  const newUser = await User.create({
+    email,
+    password: hashPassword,
+    avatarURL,
+  });
 
   // Registration success response
   res.status(201).json({
@@ -86,6 +94,33 @@ const getCurrentUsers = async (req, res) => {
     subscription,
   });
 };
+const updateUserSubscription = async (req, res) => {};
+
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: oldPath, originalname } = req.file;
+
+  await Jimp.read(oldPath).then((image) =>
+    image.cover(250, 250).write(oldPath)
+  );
+
+  const extension = path.extname(originalname);
+  const filename = `${_id}${extension}`;
+
+  // Image will be transfer from tmp folder to Public/avatars folder
+  const newPath = path.join('public', 'avatars', filename);
+  await fs.rename(oldPath, newPath);
+
+  // const avatarURL = path.join('/avatars', filename);
+  let avatarURL = path.join('/avatars', filename);
+
+  // /avatars/ramon.jpg - for window users only
+  // \\avatars\ramon.jpg - windows format
+  avatarURL = avatarURL.replace(/\\/g, '/');
+
+  await User.findByIdAndUpdate(_id, { avatarURL });
+  res.status(200).json({ avatarURL });
+};
 
 // prettier-ignore
-export { signupUser, loginUser, logoutUser, getCurrentUsers };
+export { signupUser, loginUser, logoutUser, getCurrentUsers, updateAvatar, updateUserSubscription };

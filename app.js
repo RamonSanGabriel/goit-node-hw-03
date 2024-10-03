@@ -1,12 +1,8 @@
-// const express = require('express')
-// const logger = require('morgan');
-// const cors = require('cors');
 import express from 'express';
 import logger from 'morgan';
 import cors from 'cors';
-
-// const contactsRouter = require('./routes/api/contacts');
 import { router as usersRouter } from './routes/api/usersRouter.js';
+// import { router as contactsRouter } from './routes/api/usersRouter.js';
 
 const app = express();
 
@@ -16,8 +12,13 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
+// tells Express to serve static files from the public directory
+// open http://localhost:3000/avatars/665c98dca10f7f28dc9eb8b2.jpeg on browser
+app.use(express.static('public'));
+
 // http://localhost:3000/api/users
 app.use('/api/users', usersRouter);
+// app.use('/api/contacts', contactsRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ message: 'Not found' });
