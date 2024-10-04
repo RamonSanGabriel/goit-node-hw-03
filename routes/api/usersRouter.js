@@ -29,7 +29,7 @@ router.patch('/', authToken, ctrlWrapper(updateUserSubscription));
 /* PATCH: http://localhost:3000/api/users/avatars form-data avatar, file: image */
 
 // prettier-ignore
-router.patch('/avatars',authToken, upload.single("avatar"),ctrlWrapper(updateAvatar)
+router.patch('/avatars',authToken, upload.single("avatar"), ctrlWrapper(updateAvatar)
 );
 
 // module.exports = router;

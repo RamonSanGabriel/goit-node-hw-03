@@ -1,4 +1,5 @@
 import multer from 'multer';
+import path from 'path';
 
 const tempPath = path.join('tmp');
 const multerConfig = multer.diskStorage({

@@ -1,11 +1,16 @@
 import bcrypt from 'bcrypt';
+import gravatar from 'gravatar';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import Jimp from 'jimp';
+import path from 'path';
+import fs from 'fs/promises';
 import { User } from '../models/usersModel.js';
 import { httpError } from '../helpers/httpError.js';
-import { signUpValidation } from '../validations/validations.js';
-import gravatar from 'gravatar';
-import { Jimp } from 'jimp';
+import {
+  signUpValidation,
+  subscriptionValidation,
+} from '../validations/validations.js';
 
 const { SECRET_KEY } = process.env;
 
@@ -39,6 +44,7 @@ const signupUser = async (req, res) => {
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarURL: newUser.avatarURL,
     },
   });
 };
@@ -94,7 +100,20 @@ const getCurrentUsers = async (req, res) => {
     subscription,
   });
 };
-const updateUserSubscription = async (req, res) => {};
+const updateUserSubscription = async (req, res) => {
+  const { error } = subscriptionValidation.validate(req.body);
+  if (error) {
+    throw httpError(400, error.message);
+  }
+  const { _id } = req.user;
+
+  const updateUser = await User.findByIdAndUpdate(_id, req.body, { new: true });
+
+  res.json({
+    email: updateUser.email,
+    subscription: updateUser.subscription,
+  });
+};
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;

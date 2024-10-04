@@ -1,5 +1,15 @@
 import Joi from 'joi';
 
+const contactValidation = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+});
+
+// validation for updating favorite field
+const favoriteValidation = Joi.object({
+  favorite: Joi.bool().required(),
+});
 // Define validation for adding a contact
 const signUpValidation = Joi.object({
   email: Joi.string()
@@ -15,4 +25,9 @@ const signUpValidation = Joi.object({
     'string.max': 'Password must not exceed 16 characters',
   }),
 });
-export { signUpValidation };
+
+const subscriptionValidation = Joi.object({
+  subscription: Joi.string().valid('starter', 'pro', 'business'),
+});
+// prettier-ignore
+export { contactValidation, favoriteValidation, signUpValidation, subscriptionValidation };
