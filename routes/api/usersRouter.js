@@ -2,7 +2,7 @@
 import express from 'express';
 import { ctrlWrapper } from '../../helpers/ctrlWrapper.js';
 // prettier-ignore
-import { getCurrentUsers, loginUser, logoutUser, signupUser, updateAvatar, updateUserSubscription } from '../../controllers/usersControllers.js';
+import { getCurrentUsers, loginUser, logoutUser, resendVerifyEmail, signupUser, updateAvatar, updateUserSubscription, verifyEmail } from '../../controllers/usersControllers.js';
 import { authToken } from '../../middlewares/authToken.js';
 import { upload } from '../../middlewares/upload.js';
 
@@ -31,6 +31,12 @@ router.patch('/', authToken, ctrlWrapper(updateUserSubscription));
 // prettier-ignore
 router.patch('/avatars',authToken, upload.single("avatar"), ctrlWrapper(updateAvatar)
 );
-
-// module.exports = router;
+/* GET: // http://localhost:3000/api/users/verify/:verificationToken */
+router.get('/verify/:verificationToken', ctrlWrapper(verifyEmail));
+/* POST: // http://localhost:3000/api/users/verify 
+{
+  "email": "example@example.com",
+}
+*/
+router.post('/verify', authToken, ctrlWrapper(resendVerifyEmail));
 export { router };
